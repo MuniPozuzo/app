@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-class Home extends StatefulWidget {
+class GPS extends StatefulWidget {
   @override
-  State<Home> createState() => _HomeState();
+  State<GPS> createState() => _GPSState();
 }
 
-class _HomeState extends State<Home> {
+class _GPSState extends State<GPS> {
   bool servicestatus = false;
   bool haspermission = false;
   late LocationPermission permission;
@@ -29,9 +29,9 @@ class _HomeState extends State<Home> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
+          // print('Location permissions are denied');
         } else if (permission == LocationPermission.deniedForever) {
-          print("'Location permissions are permanently denied");
+          // print("'Location permissions are permanently denied");
         } else {
           haspermission = true;
         }
@@ -58,8 +58,8 @@ class _HomeState extends State<Home> {
   getLocation() async {
     position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print(position.longitude); //Output: 80.24599079
-    print(position.latitude); //Output: 29.6593457
+    // print(position.longitude); //Output: 80.24599079
+    // print(position.latitude); //Output: 29.6593457
 
     long = position.longitude.toString();
     lat = position.latitude.toString();
@@ -77,8 +77,8 @@ class _HomeState extends State<Home> {
     StreamSubscription<Position> positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
+      // print(position.longitude); //Output: 80.24599079
+      // print(position.latitude); //Output: 29.6593457
 
       long = position.longitude.toString();
       lat = position.latitude.toString();

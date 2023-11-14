@@ -1,6 +1,14 @@
 // ignore_for_file: unused_import
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:appproyecto2/home/Registro.dart';
+import 'package:appproyecto2/home/Registro2_all.dart';
+import 'package:appproyecto2/home/list1.dart';
+import 'package:appproyecto2/home/listview.dart';
+import 'package:http/http.dart' as http;
+import 'package:appproyecto2/home/Registro%20copy.dart';
+import 'package:appproyecto2/home/Registro2.dart';
+import 'package:appproyecto2/home/dialog.dart';
 import 'package:appproyecto2/home/drop.dart';
 import 'package:appproyecto2/home/foto2.dart';
 import 'package:appproyecto2/home/gps.dart';
@@ -19,6 +27,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   get press => null;
+/*   Future<List> fetchData() async {
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:3001/getImages'));
+
+    if (response.statusCode == 200) {
+      // Si la solicitud fue exitosa, parsea la respuesta JSON
+      final data = json.decode(response.body);
+      return data["images"];
+    } else {
+      // Si la solicitud falla, muestra un mensaje de error
+      print('Error al obtener datos. Código de estado: ${response.statusCode}');
+    }
+    throw ["images"];
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              FormularioPage()));
+                                              FormularioPage2()));
                                   /*   FormPage(
                                                 title: '',
                                               ))); */
@@ -113,7 +135,10 @@ class _HomePageState extends State<HomePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Home()));
+                                          builder: (context) =>
+
+                                              /*   List1())); */
+                                              ListViewFromSqlServer()));
                                   /*      RecursoInsertarMonitoreoProyecto())); */
                                 },
                                 child: SizedBox(
@@ -138,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
+
                         /*     Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
@@ -216,6 +242,40 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
+                  /*           Container(
+                    width: double.infinity,
+                    height: 400,
+                    color: Colors.red,
+                    child: FutureBuilder(
+                      future: fetchData(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return Text('Esperando la solicitud');
+                          case ConnectionState.active:
+                          case ConnectionState.waiting:
+                            return Text('Cargando...');
+                          case ConnectionState.done:
+                            if (snapshot.hasError)
+                              return Text('Error: ${snapshot.error}');
+                            return ListView.builder(
+                                itemCount: snapshot.data!.length,
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  final MaterialColor col = index % 2 == 0
+                                      ? Colors.red
+                                      : Colors.green;
+                                  return Container(
+                                      padding: const EdgeInsets.all(20),
+                                      color: col,
+                                      child: Image.memory(
+                                          base64Decode(snapshot.data![index])));
+                                });
+                        }
+                      },
+                    ),
+                  ) */
                 ],
               ),
             ),

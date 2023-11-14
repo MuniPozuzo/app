@@ -1,15 +1,22 @@
 import 'package:appproyecto2/Login/login.dart';
+import 'package:appproyecto2/home/menunavegacion.dart';
 import 'package:flutter/material.dart';
+// Shared preferences
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-/*   WidgetsFlutterBinding.ensureInitialized(); // esto que es ? */
-
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final user = prefs.getString('id') ?? '';
+  runApp(MyApp(user: user));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  const MyApp({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+  final user;
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -17,30 +24,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String? get title => null;
 
-/*   int currentState = 0; */
-/*   Widget page = SplashScreen(); */
-
   @override
-/*   void initState() {
-    super.initState();
-   /*  checkLogin(); */
-  }
- */
-/*   void checkLogin() async {
-    String token = await storage.read(key: "token");
-    // ignore: unnecessary_null_comparison
-    if (token != null) {
-      setState(() {
-        page = const MenuNavegacion();
-      });
-    } else {
-      setState(() {
-        /*       page = const LoginScreen(); */
-        page = const LoginScreen();
-      });
-    }
-  } */
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,22 +35,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.indigo,
       ),
       /*  home: const LoginScreen(), */
-      home: const LoginScreen(),
+      home: widget.user == '' ? const LoginScreen() : MenuNavegacion(),
     );
   }
 }
-
-/* class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => HomeScreen(),
-        '/second': (context) => SecondScreen(),
-      },
-    );
-  }
-}
- */

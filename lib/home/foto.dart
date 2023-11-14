@@ -19,8 +19,7 @@ Future<void> subirImagen(File imageFile, String nombre) async {
   );
 
   if (response.statusCode == 200) {
-    print('Imagen guardada correctamente');
   } else {
-    print('Error al guardar la imagen');
+    throw Error();
   }
 }

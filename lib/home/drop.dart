@@ -1,135 +1,134 @@
-/* import 'dart:convert';
-
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
-//import http package manually
 
+void main() {
+  runApp(const MyApp());
+}
 
-class EditAddressFormPage extends StatefulWidget {
-  const EditAddressFormPage({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
-  EditPhoneFormPageState createState() {
-    return EditPhoneFormPageState();
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'DropdownButton2 Demo',
+      home: MyHomePage(),
+    );
   }
 }
 
-class EditPhoneFormPageState extends State<EditAddressFormPage> {
-  final _formKey = GlobalKey<FormState>();
-  final addressCountryController = TextEditingController();
-  final addressCityController = TextEditingController();
-  var user = UserData.myUser;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-  String? selectedValue;
-  List<String> items = [
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<String> items = [
     'Item1',
     'Item2',
     'Item3',
     'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
   ];
-
-  @override
-  void dispose() {
-    addressCountryController.dispose();
-    addressCityController.dispose();
-    super.dispose();
-  }
-
-  void updateCountry(String country) {
-    String formattedPhoneNumber = country.substring(0,country.length);
-    user.address_country = formattedPhoneNumber;
-  }
-
-  void updateCity(String city) {
-    String formattedPhoneNumber = city.substring(0, city.length);
-    user.address_city = formattedPhoneNumber;
-  }
-
-  _goBack(BuildContext context) {
-    Navigator.pop(context);
-  }
+  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Form(
-          key: _formKey,
-          child: Column(
-              children: <Widget>[
-                const SizedBox(height: 15),
-                const Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                        width: 270,
-                        child: Text("What is your new address?",
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ))),
-                Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        hint: Text('Select country', style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).hintColor,),),
-                        items: items.map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(fontSize: 14,),),)).toList(),
-                        value: selectedValue,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValue = value as String;});},
-                        buttonHeight: 40,
-                        buttonWidth: 320,
-                        itemHeight: 40,
+      body: Center(
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton2<String>(
+            isExpanded: true,
+            hint: const Row(
+              children: [
+                Icon(
+                  Icons.list,
+                  size: 16,
+                  color: Colors.yellow,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Expanded(
+                  child: Text(
+                    'Select Item',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellow,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            items: items
+                .map((String item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),),
-
-                Padding(
-                    padding: EdgeInsets.only(top: 0),
-                    child: SizedBox(
-                        height: 100,
-                        width: 320,
-                        child: TextFormField(
-                          // Handles Form Validation
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your city';
-                            }
-                            return null;
-                          },
-                          controller: addressCityController,
-                          decoration: const InputDecoration(
-                            labelText: 'City',
-                          ),
-                        ))),
-                Padding(
-                    padding: EdgeInsets.only(top: 50),
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          width: 320,
-                          height: 50,
-                          child: ElevatedButton(
-
-                            onPressed: () {
-                              // Validate returns true if the form is valid, or false otherwise.
-                              if (_formKey.currentState!.validate() ) {
-                                updateCountry(addressCountryController.text);
-                                updateCity(addressCityController.text);
-                                Navigator.pop(context);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.black),
-                            child: const Text(
-                              'Update',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ),
-                        )))
-              ]),
-        ));
+                    ))
+                .toList(),
+            value: selectedValue,
+            onChanged: (String? value) {
+              setState(() {
+                selectedValue = value;
+              });
+            },
+            buttonStyleData: ButtonStyleData(
+              height: 50,
+              width: 160,
+              padding: const EdgeInsets.only(left: 14, right: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Colors.black26,
+                ),
+                color: Colors.redAccent,
+              ),
+              elevation: 2,
+            ),
+            iconStyleData: const IconStyleData(
+              icon: Icon(
+                Icons.arrow_forward_ios_outlined,
+              ),
+              iconSize: 14,
+              iconEnabledColor: Colors.yellow,
+              iconDisabledColor: Colors.grey,
+            ),
+            dropdownStyleData: DropdownStyleData(
+              maxHeight: 200,
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Colors.redAccent,
+              ),
+              offset: const Offset(-20, 0),
+              scrollbarTheme: ScrollbarThemeData(
+                radius: const Radius.circular(40),
+                thickness: MaterialStateProperty.all<double>(6),
+                thumbVisibility: MaterialStateProperty.all<bool>(true),
+              ),
+            ),
+            menuItemStyleData: const MenuItemStyleData(
+              height: 40,
+              padding: EdgeInsets.only(left: 14, right: 14),
+            ),
+          ),
+        ),
+      ),
+    );
   }
-} */
+}

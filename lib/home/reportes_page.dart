@@ -1,6 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+import 'package:appproyecto2/modelo/Inspections.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //import 'package:mi_pais/TramaProyectos.dart';
 
@@ -12,6 +16,36 @@ class ReportesPage extends StatefulWidget {
 }
 
 class _ReportesPageState extends State<ReportesPage> {
+  String id = '';
+  @override
+  void initState() {
+    super.initState();
+    getIdShared();
+  }
+
+  void getIdShared() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String idGuardado = prefs.getString('id') ?? "";
+
+    setState(() {
+      id = idGuardado;
+    });
+  }
+
+  Future<Inspection> getInspections() async {
+    const url = "http://10.0.2.2:3001/apiv1/project/getByUser";
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'id': id,
+      }),
+    );
+    return inspectionFromJson(response.body);
+  }
+
   get press => null;
 
   @override

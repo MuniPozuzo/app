@@ -1,17 +1,16 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: use_build_context_synchronously, avoid_print, depend_on_referenced_packages
 import 'dart:convert';
 /* import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_pais/pages/extern/cuaderno_obra_residente.dart'; */
 
+import 'package:appproyecto2/modelo/authmodel.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../home/menunavegacion.dart';
-/* import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'package:mi_pais/pages/NetworkHandler.dart';
-import 'package:mi_pais/pages/mongodb/MongoDBModel.dart';
-import 'package:mi_pais/pages/widgets/MenuNavegacion/menu_navegacion.dart'; */
+// Librerias para alaerta
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
@@ -30,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool vis = true;
   final _globalkey = GlobalKey<FormState>();
 /*   NetworkHandler networkHandler = NetworkHandler(); */
-  TextEditingController _usernameController = TextEditingController();
+  /*  TextEditingController _usernameController = TextEditingController(); */
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String errorText = "";
@@ -49,6 +48,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<AutModel> login() async {
+    final String username = _emailController.text;
+    final String pass = _passwordController.text;
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:3001/apiv1/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'username': username,
+        'password': pass,
+      }),
+    );
+
+    AutModel res = authFromJson(response.body);
+
+    return res;
+  }
+
   Widget initWidget() {
     return Scaffold(
       body: SingleChildScrollView(
@@ -63,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius:
                       const BorderRadius.only(bottomLeft: Radius.circular(90)),
                   image: const DecorationImage(
-                    image: AssetImage('assets/screen_login.jpg'),
+                    image: AssetImage('assets/login_app2.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -98,68 +116,46 @@ class _LoginScreenState extends State<LoginScreen> {
                   )),
               InkWell(
                 onTap: () async {
-                  setState(() {
-                    circular = true;
-                    String title = "Login";
-                    Navigator.push(
+                  final pass = _passwordController.text;
+                  final email = _emailController.text;
+                  try {
+                    if (email.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Correo vacio');
+                      return print('email vacio');
+                    }
+                    if (pass.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Paswword vacio');
+                      return print('pass vacio');
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
+
+                  final res = await login();
+
+                  if (res.status == true) {
+                    // Si todo esta bien guardar en shared y navegar ala otra pantalla
+                    // Elimnando esta de login
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('id', res.user.id.toString());
+                    prefs.setString('name', res.user.username.toString());
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => MenuNavegacion()),
                     );
-                  });
-
-                  //Login Logic start here
-                  Map<String, String> data = {
-                    /*      "username": _usernameController.text, */
-                    "codigo": _emailController.text,
-                    "password": _passwordController.text,
-                  };
-
-                  /*  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>  const MyHomePage(),
-                      ),
-                      (route) => false) */
-                  ;
-                  /*        /* var response = await networkHandler.post("/user/login", data); */
-                  var response =
-                      await networkHandler.post("/api/auth/signin", data); */
-
-                  /*   if (response.statusCode == 200 ||
-                      response.statusCode == 201) {
-                    Map<String, dynamic> output = json.decode(response.body);
-
-                    final codigousuario = output["userFound"]["codigo"];
-                    final nombreusuario = output["userFound"]["usuario"];
-                    final rolusuario = output["userFound"]["roles"][0]["name"];
-                    final datosusuario = GetStorage();
-
-                    datosusuario.write("codigousuario", codigousuario);
-                    datosusuario.write("nombreusuario", nombreusuario);
-                    datosusuario.write("rolusuario", rolusuario);
-                    print(output["token"]);
-                    await storage.write(key: "token", value: output["token"]);
-                    /* setState(() {
-                      validate = true;
-                      circular = false;
-                    }); */
-/* 
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MenuNavegacion(),
-                        ),
-                        (route) => false);
                   } else {
-                    String output = json.decode(response.body);
-                    setState(() {
-                      validate = false;
-                      errorText = output;
-                      circular = false;
-                    }); */
+                    /*     print('wenas xd'); */
+                    Fluttertoast.showToast(
+                        msg: '${res.message}',
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                    // Fluttertoast.cancel();
                   }
- */
-                  // login logic End here
                 },
                 child: Container(
                   alignment: Alignment.center,

@@ -53,9 +53,6 @@ Future selimagen(op) async{
     }
 
 
-
-
-  
   Dio dio = new Dio();
 
   Future<void> _subirimagen() async {
