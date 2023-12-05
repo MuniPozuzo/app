@@ -34,7 +34,7 @@ class Inspection {
 }
 
 class InspectionElement {
-  String idinspeccion;
+  String id;
   String tv;
   String modulador;
   String radiofm;
@@ -54,7 +54,7 @@ class InspectionElement {
   int idUsuario;
 
   InspectionElement({
-    required this.idinspeccion,
+    required this.id,
     required this.tv,
     required this.modulador,
     required this.radiofm,
@@ -76,7 +76,7 @@ class InspectionElement {
 
   factory InspectionElement.fromJson(Map<String, dynamic> json) =>
       InspectionElement(
-        idinspeccion: json["idinspeccion "],
+        id: json["id"],
         tv: json["tv"],
         modulador: json["modulador"],
         radiofm: json["radiofm"],
@@ -97,7 +97,7 @@ class InspectionElement {
       );
 
   Map<String, dynamic> toJson() => {
-        "idinspeccion ": idinspeccion,
+        "id": id,
         "tv": tv,
         "modulador": modulador,
         "radiofm": radiofm,

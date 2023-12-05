@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:appproyecto2/home/Registro2_all.dart';
 import 'package:appproyecto2/home/list1.dart';
 import 'package:appproyecto2/home/listview.dart';
+import 'package:appproyecto2/pages/Inspectionregister.dart';
 import 'package:http/http.dart' as http;
 import 'package:appproyecto2/home/Registro%20copy.dart';
 import 'package:appproyecto2/home/Registro2.dart';
@@ -94,7 +95,8 @@ class _HomePageState extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              FormularioPage2()));
+                                              // FormularioPage2()
+                                              inspectionRegister()));
                                   /*   FormPage(
                                                 title: '',
                                               ))); */

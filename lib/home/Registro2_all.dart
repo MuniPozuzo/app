@@ -1,3 +1,6 @@
+// ignore_for_file: override_on_non_overriding_member
+
+import 'package:appproyecto2/constants/urls.dart';
 // ignore_for_file: file_names
 
 import 'dart:async';
@@ -117,6 +120,9 @@ class FormularioPage2 extends StatefulWidget {
 }
 
 class _FormularioPageState extends State<FormularioPage2> {
+// Loading para ver el tiempo de carga y validar si tuvo exito la peticion o no
+  bool isLoading = false;
+
   //Donde se guarda la imagen que se tome
   String base64image = "";
   String base64image2 = "";
@@ -148,15 +154,32 @@ class _FormularioPageState extends State<FormularioPage2> {
 /*   final formattedDate = "${now.day}-${now.month}-${now.year}"; */
 
   @override
-  void _onTextChanged(String value) {
-    // Realiza acciones cuando se ingresa texto
-    print("Texto ingresado: $value");
+  String handleChangeComents(String value) {
+    setState(() {
+      comentarios = value;
+    });
+    return comentarios;
   }
 
-  void clearDropdown() {
+  void clearForm() {
     setState(() {
-      String selectedValueTV =
-          ''; // Esto restablecerá el valor del DropdownButton
+      selectedValueTV = '';
+      comentarios = "";
+      textEditingController.clear();
+      fecha = "";
+      long = "";
+      lat = "";
+      selectedValueModuladorTV = '';
+      selectedValueRadioFM = '';
+      selectedValueTransmisorHF = '';
+      selectedValueAntenaTV = '';
+      selectedValueAntenaFM = '';
+      selectedValueReceptorSatelital = '';
+      selectedValueAntenaParabolica = '';
+      selectedValuePozoTierra = '';
+      selectedValueParaRayos = '';
+      base64image = "";
+      base64image2 = "";
     });
   }
 
@@ -242,6 +265,7 @@ class _FormularioPageState extends State<FormularioPage2> {
         getLocation();
       }
     } else {
+      // Geolocator();
       print("GPS Service is not enabled, turn on GPS location");
     }
 
@@ -284,7 +308,7 @@ class _FormularioPageState extends State<FormularioPage2> {
     });
   }
 
-  Future<void> _guardarDatos(
+  Future<bool> _guardarDatos(
       tv,
       modulador,
       radiofm,
@@ -302,9 +326,9 @@ class _FormularioPageState extends State<FormularioPage2> {
       comentarios,
       image2,
       id) async {
-    //var url = 'http://10.0.2.2:3001/guardar-datos';
+    //var url = '$UrlApi/guardar-datos';
+    //  var url = '$UrlApi/project/add';
     var url = 'http://10.0.2.2:3001/apiv1/project/add';
-
     var body = {
       'tv': tv,
       'modulador': modulador,
@@ -320,12 +344,14 @@ class _FormularioPageState extends State<FormularioPage2> {
       'long': position.longitude.toString(),
       'lat': position.latitude.toString(),
       'fecha': fecha = "${now.day}-${now.month}-${now.year}",
-      'comentarios': textEditingController.text,
+      'comentarios': comentarios,
       'image2': image2,
       'idUser': id
     };
     final bodyDecode = json.encode(body);
-
+    setState(() {
+      isLoading = true;
+    });
     var response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -335,11 +361,15 @@ class _FormularioPageState extends State<FormularioPage2> {
     );
 
     if (response.statusCode == 200) {
-      print('Datos guardados exitosamente');
-      // Realizar acciones adicionales después de guardar los datos
+      setState(() {
+        isLoading = false;
+      });
+      return true;
     } else {
-      print(
-          'Error al guardar los datos. Código de estado: ${response.statusCode}');
+      setState(() {
+        isLoading = false;
+      });
+      return false;
     }
   }
 
@@ -354,411 +384,454 @@ class _FormularioPageState extends State<FormularioPage2> {
         title: const Text('INSPECCIÓN TÉCNICA '),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                /*   Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child: Text(
-                    'Fecha de Inspección: $now',
-                  ),
-                ), */
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    /*   Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: Text(
+                        'Fecha de Inspección: $now',
+                      ),
+                    ), */
 
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child: Text(
-                    "Latitude: $lat",
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child:
-                      Text("Longitude: $long", style: TextStyle(fontSize: 14)),
-                ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: Text(
+                        "Latitude: $lat",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: Text("Longitude: $long",
+                          style: TextStyle(fontSize: 14)),
+                    ),
 
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  height: 20,
-                  // color: Colors.grey,
-                ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      height: 20,
+                      // color: Colors.grey,
+                    ),
 
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child: Text(
-                    'SELECCIONE',
-                  ),
-                ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: Text(
+                        'SELECCIONE',
+                      ),
+                    ),
 
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'TX TELEVISIÓN',
+                    Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [],
+                      ),
                     ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownItems,
-                        value: selectedValueTV,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueTV = value.toString();
-                          });
-                        })
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'MODULADOR TV',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownModuladorTV,
-                        value: selectedValueModuladorTV,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueModuladorTV = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'TX RADIO FM',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownRadioFM,
-                        value: selectedValueRadioFM,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueRadioFM = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'TRANSMISOR HF',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownTransmisorHF,
-                        value: selectedValueTransmisorHF,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueTransmisorHF = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'ANTENA TV',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownAntenaTV,
-                        value: selectedValueAntenaTV,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueAntenaTV = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'ANTENA FM',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownAntenaFM,
-                        value: selectedValueAntenaFM,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueAntenaFM = value.toString();
-                          });
-                        })
-                  ],
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'RECEPTOR SATELITAL',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownreceptorSatelital,
-                        value: selectedValueReceptorSatelital,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueReceptorSatelital = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'ANTENA PARABÓLICA',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownAntenaParabolica,
-                        value: selectedValueAntenaParabolica,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueAntenaParabolica = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'POZO A TIERRA',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownPozoTierra,
-                        value: selectedValuePozoTierra,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValuePozoTierra = value.toString();
-                          });
-                        })
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'PARA RRAYOS',
-                    ),
-                    //MyDropDowButton()
-                    DropdownButton(
-                        items: dropdownParaRayos,
-                        value: selectedValueParaRayos,
-                        hint: const Text("Seleccione"),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValueParaRayos = value.toString();
-                          });
-                        })
-                  ],
-                ),
-
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: double.infinity,
-                  // color: Colors.grey,
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Introduce un texto',
-                    ),
-                    onChanged:
-                        _onTextChanged, // Manejador de cambios en el texto
-                  ),
-                ),
-
-                Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 8,
-                  // color: Colors.grey,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [],
-                  ),
-                ),
-                // Boton de guardar
-                const SizedBox(height: 40.0, width: 30),
-
-                Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    // color: Colors.grey,
-                    child: Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Text('Tomar Foto'),
-                        const SizedBox(
-                          width: 10,
+                        Text(
+                          'TX TELEVISIÓN',
                         ),
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Center(
-                            child: TextButton(
-                              onPressed: () {
-                                uploadImage();
-                              },
-                              child: base64image.isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.memory(
-                                        base64Decode(base64image),
-                                        width: 200,
-                                        height: 200,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : const Text('Foto'),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Center(
-                            child: TextButton(
-                              onPressed: () {
-                                uploadImage2();
-                              },
-                              child: base64image2.isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.memory(
-                                        base64Decode(base64image2),
-                                        width: 200,
-                                        height: 200,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : const Text('Foto'),
-                            ),
-                          ),
-                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownItems,
+                            value: selectedValueTV,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueTV = value.toString();
+                              });
+                            })
                       ],
-                    )),
-                ElevatedButton(
-                  onPressed: () async {
-                    // if (selectedValueTV.isEmpty) {
-                    //   //Aca se puede mostrar un alerta
-                    //   showDialog<String>(
-                    //     context: context,
-                    //     builder: (BuildContext context) => AlertDialog(
-                    //       title: const Text('Alerta'),
-                    //       content: const Text('No Selecciono un Estado'),
-                    //       actions: <Widget>[
-                    //         TextButton(
-                    //           onPressed: () => Navigator.pop(context, 'Cancel'),
-                    //           child: const Text('Cancel'),
-                    //         ),
-                    //         TextButton(
-                    //           onPressed: () => Navigator.pop(context, 'OK'),
-                    //           child: const Text('OK'),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   );
-                    if (base64image.isEmpty) {
-                      //Aca se puede mostrar un alerta
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Alerta'),
-                          content: const Text('Toma evidencias, fotografia'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'MODULADOR TV',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownModuladorTV,
+                            value: selectedValueModuladorTV,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueModuladorTV = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'TX RADIO FM',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownRadioFM,
+                            value: selectedValueRadioFM,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueRadioFM = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'TRANSMISOR HF',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownTransmisorHF,
+                            value: selectedValueTransmisorHF,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueTransmisorHF = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'ANTENA TV',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownAntenaTV,
+                            value: selectedValueAntenaTV,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueAntenaTV = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'ANTENA FM',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownAntenaFM,
+                            value: selectedValueAntenaFM,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueAntenaFM = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'RECEPTOR SATELITAL',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownreceptorSatelital,
+                            value: selectedValueReceptorSatelital,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueReceptorSatelital =
+                                    value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'ANTENA PARABÓLICA',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownAntenaParabolica,
+                            value: selectedValueAntenaParabolica,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueAntenaParabolica =
+                                    value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'POZO A TIERRA',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownPozoTierra,
+                            value: selectedValuePozoTierra,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValuePozoTierra = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'PARA RRAYOS',
+                        ),
+                        //MyDropDowButton()
+                        DropdownButton(
+                            items: dropdownParaRayos,
+                            value: selectedValueParaRayos,
+                            hint: const Text("Seleccione"),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueParaRayos = value.toString();
+                              });
+                            })
+                      ],
+                    ),
+
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      // color: Colors.grey,
+                      child: TextField(
+                        controller: textEditingController,
+                        decoration: InputDecoration(
+                          labelText: 'Introduce un texto',
+                        ),
+                        onChanged: (value) => handleChangeComents(value),
+                      ),
+                    ),
+
+                    Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 8,
+                      // color: Colors.grey,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [],
+                      ),
+                    ),
+                    // Boton de guardar
+                    const SizedBox(height: 40.0, width: 30),
+
+                    Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        // color: Colors.grey,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Text('Tomar Foto'),
+                            const SizedBox(
+                              width: 10,
                             ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: TextButton(
+                                  onPressed: () {
+                                    uploadImage();
+                                  },
+                                  child: base64image.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: Image.memory(
+                                            base64Decode(base64image),
+                                            width: 200,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : const Text('Foto'),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: TextButton(
+                                  onPressed: () {
+                                    uploadImage2();
+                                  },
+                                  child: base64image2.isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: Image.memory(
+                                            base64Decode(base64image2),
+                                            width: 200,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : const Text('Foto'),
+                                ),
+                              ),
                             ),
                           ],
-                        ),
-                      );
-                    } else {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      final iduser = prefs.getString('id');
-                      _guardarDatos(
-                          selectedValueTV,
-                          selectedValueModuladorTV,
-                          selectedValueRadioFM,
-                          selectedValueTransmisorHF,
-                          selectedValueAntenaTV,
-                          selectedValueAntenaFM,
-                          selectedValueReceptorSatelital,
-                          selectedValueAntenaParabolica,
-                          selectedValuePozoTierra,
-                          selectedValueParaRayos,
-                          base64image,
-                          long,
-                          lat,
-                          fecha,
-                          comentarios,
-                          base64image2,
-                          iduser);
-                    }
-                  },
-                  child: const Text('Guardar'),
+                        )),
+                    ElevatedButton(
+                      onPressed: () async {
+                        // if (selectedValueTV.isEmpty) {
+                        //   //Aca se puede mostrar un alerta
+                        //   showDialog<String>(
+                        //     context: context,
+                        //     builder: (BuildContext context) => AlertDialog(
+                        //       title: const Text('Alerta'),
+                        //       content: const Text('No Selecciono un Estado'),
+                        //       actions: <Widget>[
+                        //         TextButton(
+                        //           onPressed: () => Navigator.pop(context, 'Cancel'),
+                        //           child: const Text('Cancel'),
+                        //         ),
+                        //         TextButton(
+                        //           onPressed: () => Navigator.pop(context, 'OK'),
+                        //           child: const Text('OK'),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   );
+                        if (base64image.isEmpty) {
+                          //Aca se puede mostrar un alerta
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text('Alerta'),
+                              content:
+                                  const Text('Toma evidencias, fotografia'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          final iduser = prefs.getString('id');
+                          final res = await _guardarDatos(
+                              selectedValueTV,
+                              selectedValueModuladorTV,
+                              selectedValueRadioFM,
+                              selectedValueTransmisorHF,
+                              selectedValueAntenaTV,
+                              selectedValueAntenaFM,
+                              selectedValueReceptorSatelital,
+                              selectedValueAntenaParabolica,
+                              selectedValuePozoTierra,
+                              selectedValueParaRayos,
+                              base64image,
+                              long,
+                              lat,
+                              fecha,
+                              comentarios,
+                              base64image2,
+                              iduser);
+                          if (res == true) {
+                            showTemporaryDialog(context, 'Datos guardados');
+                            clearForm();
+                          } else {
+                            showTemporaryDialog(
+                                context, 'Error al guardar los datos ');
+                          }
+                        }
+                      },
+                      child: const Text('Guardar'),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            isLoading == true
+                ? Container(
+                    color: const Color.fromARGB(26, 0, 0, 0),
+                    height: double.maxFinite,
+                    width: double.maxFinite,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Text('')
+          ],
         ),
       ),
     );
+  }
+
+  void showTemporaryDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Respuesta'),
+          content: Text(message),
+        );
+      },
+    );
+
+    // Programa el cierre del diálogo después de 2 segundos
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+    });
   }
 }

@@ -61,9 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'password': pass,
       }),
     );
-
     AutModel res = authFromJson(response.body);
-
     return res;
   }
 
@@ -138,8 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Elimnando esta de login
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
-                    prefs.setString('id', res.user.id.toString());
-                    prefs.setString('name', res.user.username.toString());
+                    prefs.setString('id', res.user!.id.toString());
+                    prefs.setString('name', res.user!.username.toString());
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => MenuNavegacion()),

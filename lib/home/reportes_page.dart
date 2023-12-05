@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'dart:convert';
 
+import 'package:appproyecto2/home/list_view_estaciones.dart';
 import 'package:http/http.dart' as http;
 import 'package:appproyecto2/modelo/Inspections.dart';
 import 'package:flutter/material.dart';
@@ -95,12 +96,11 @@ class _ReportesPageState extends State<ReportesPage> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () {
-                                  /*  Navigator.push(
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              CuadernoObraResidente())) */
-                                  ;
+                                              ListViewEstacion()));
                                 },
                                 child: SizedBox(
                                   height: 80,

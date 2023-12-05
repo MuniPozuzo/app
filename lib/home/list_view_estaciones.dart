@@ -1,4 +1,3 @@
-import 'package:appproyecto2/constants/urls.dart';
 import 'dart:convert';
 import 'package:appproyecto2/modelo/Inspections.dart';
 import 'package:appproyecto2/pages/Detailinspection.dart';
@@ -6,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ListViewFromSqlServer extends StatefulWidget {
+class ListViewEstacion extends StatefulWidget {
   @override
-  _ListViewFromSqlServerState createState() => _ListViewFromSqlServerState();
+  _ListViewEstacionState createState() => _ListViewEstacionState();
 }
 
-class _ListViewFromSqlServerState extends State<ListViewFromSqlServer> {
+class _ListViewEstacionState extends State<ListViewEstacion> {
   List<dynamic> data = [];
   String id = '';
   @override
@@ -30,8 +29,7 @@ class _ListViewFromSqlServerState extends State<ListViewFromSqlServer> {
   }
 
   Future<Inspection> getInspections() async {
-    //const url = "$UrlApi/project/getByUser";
-    const url = "http://10.0.2.2:3001/apiv1/project/getByUser";
+    const url = "http://10.0.2.2:3001/apiv1/project/get_estaciones";
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -84,12 +82,13 @@ class _ListViewFromSqlServerState extends State<ListViewFromSqlServer> {
                       trailing: IconButton(
                         onPressed: () {
                           // Manejar la acción cuando se toca el botón
-                          Navigator.push(
+                          /*     Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Detailinspection(
                                         inspectionElement: elemento,
-                                      )));
+                                      ))) */
+                          ;
                         },
                         icon: const Icon(Icons.arrow_forward_ios),
                       )),

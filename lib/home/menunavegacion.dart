@@ -36,7 +36,6 @@ class MenuNavegacion extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Nombre de usuario loaggeado $name'),
             TextButton(
                 onPressed: () async {
                   SharedPreferences prefs =

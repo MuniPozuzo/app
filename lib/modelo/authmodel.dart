@@ -11,19 +11,18 @@ String authToJson(AutModel data) => json.encode(data.toJson());
 class AutModel {
   bool status;
   String message;
-  User user;
+  User? user;
 
   AutModel({
     required this.status,
     required this.message,
-    required this.user,
+    this.user,
   });
 
   factory AutModel.fromJson(Map<String, dynamic> json) => AutModel(
-        status: json["status"],
-        message: json["message"],
-        user: User.fromJson(json["user"]),
-      );
+      status: json["status"],
+      message: json["message"],
+      user: User.fromJson(json['user']));
 
   Map<String, dynamic> toJson() => {
         "status": status,
@@ -32,9 +31,9 @@ class AutModel {
 }
 
 class User {
-  String username;
-  String password;
-  int id;
+  String? username;
+  String? password;
+  int? id;
 
   User({
     required this.username,
