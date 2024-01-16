@@ -1,9 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 import 'dart:convert';
 
-import 'package:appproyecto2/home/list_view_estaciones.dart';
+import 'package:appproyecto2/home/Listar_Estaciones_List.dart';
 import 'package:http/http.dart' as http;
-import 'package:appproyecto2/modelo/Inspections.dart';
+import 'package:appproyecto2/models/Inspections.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -96,11 +96,11 @@ class _ReportesPageState extends State<ReportesPage> {
                             children: <Widget>[
                               InkWell(
                                 onTap: () {
-                                  Navigator.push(
+                                  /*   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              ListViewEstacion()));
+                                              Listar_Estaciones_List())); */
                                 },
                                 child: SizedBox(
                                   height: 80,

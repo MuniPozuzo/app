@@ -1,10 +1,13 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+   package="com.example.google_maps_example">
     <application
-        android:label="appproyecto2"
+        android:label="DRTC Inspecciones"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
          android:usesCleartextTraffic="true"
         >
+             <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyCfXnfJAD4JnbM5JjF8zRD4HxW_0cc1MLU"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

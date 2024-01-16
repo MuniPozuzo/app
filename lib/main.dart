@@ -1,6 +1,10 @@
-import 'package:appproyecto2/Login/login.dart';
-import 'package:appproyecto2/home/menunavegacion.dart';
+import 'package:appproyecto2/Login/Login.dart';
+import 'package:appproyecto2/Login/Sign_Up.dart';
+import 'package:appproyecto2/Splashscreen/Splash.dart';
+import 'package:appproyecto2/home/Menu_Navegacion.dart';
+
 import 'package:flutter/material.dart';
+import 'dart:async';
 // Shared preferences
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,20 +26,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+/*   final List<String> listaItems = ['Elemento 1', 'Elemento 2', 'Elemento 3']; */
+
   String? get title => null;
 
-  @override
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PNVR APP',
+      title: 'App Registro Inspecciones',
       debugShowCheckedModeBanner: false,
       initialRoute: 'login',
       theme: ThemeData(
         primaryColor: Colors.indigo,
       ),
-      /*  home: const LoginScreen(), */
+      /* home: SplashScreen(), */
       home: widget.user == '' ? const LoginScreen() : MenuNavegacion(),
+      /*      home: widget.user == '' ? LoginScreen() : MenuNavegacion(), */
+      /*  routes: {
+          "splash": (context) => SplashScreen(),
+          "home": (context) => MenuNavegacion()
+        } */
+/*       home: ListaItems(listaItems: listaItems), */
     );
   }
 }

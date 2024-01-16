@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable, must_call_super, use_build_context_synchronously, import_of_legacy_library_into_null_safe, unused_import
 
+import 'package:appproyecto2/home/Menu_Navegacion.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 
 import '../Login/login.dart';
@@ -16,7 +18,28 @@ class SplashScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _Splashscreen();
 }
 
-class _Splashscreen extends State<SplashScreen> {
+class _Splashscreen extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => MenuNavegacion(),
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    super.dispose();
+  }
+
   // final route =
 /*   final storage = const FlutterSecureStorage(); */
 /*   checkLogin() async {
@@ -27,10 +50,10 @@ class _Splashscreen extends State<SplashScreen> {
     } else {}
   } */
 
-  @override
+  /*  @override
   void initState() {
     super.initState();
-    startTimer();
+    startTimer(); */
 
 /*   void initState() {
     var duration = const Duration(seconds: 4);
@@ -49,7 +72,6 @@ class _Splashscreen extends State<SplashScreen> {
       } */
     });
   } */
-  }
 
   void startTimer() {
     Timer(Duration(seconds: 3), () {

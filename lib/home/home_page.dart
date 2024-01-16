@@ -1,23 +1,13 @@
 // ignore_for_file: unused_import
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:appproyecto2/home/Registro2_all.dart';
-import 'package:appproyecto2/home/list1.dart';
-import 'package:appproyecto2/home/listview.dart';
-import 'package:appproyecto2/pages/Inspectionregister.dart';
+import 'package:appproyecto2/home/Convenios_mapa.dart';
+import 'package:appproyecto2/home/Registro_Inspeccion.dart';
+import 'package:appproyecto2/home/Listar_Inspecciones.dart';
+import 'package:appproyecto2/home/Listar_Estaciones.dart';
+import 'package:appproyecto2/widgets/search_list2.dart';
 import 'package:http/http.dart' as http;
-import 'package:appproyecto2/home/Registro%20copy.dart';
-import 'package:appproyecto2/home/Registro2.dart';
-import 'package:appproyecto2/home/dialog.dart';
-import 'package:appproyecto2/home/drop.dart';
-import 'package:appproyecto2/home/foto2.dart';
-import 'package:appproyecto2/home/gps.dart';
 import 'package:flutter/material.dart';
-
-/* import 'formulario_supervisor.dart'; */
-
-//import 'package:mi_pais/TramaProyectos.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,25 +18,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   get press => null;
-/*   Future<List> fetchData() async {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2:3001/getImages'));
-
-    if (response.statusCode == 200) {
-      // Si la solicitud fue exitosa, parsea la respuesta JSON
-      final data = json.decode(response.body);
-      return data["images"];
-    } else {
-      // Si la solicitud falla, muestra un mensaje de error
-      print('Error al obtener datos. Código de estado: ${response.statusCode}');
-    }
-    throw ["images"];
-  } */
-
   @override
   Widget build(BuildContext context) {
-    /*  String rolusuario = GetStorage().read("rolusuario"); */
-    // to get size
     var size = MediaQuery.of(context).size;
     // style
     // ignore: unused_local_variable, prefer_const_constructors
@@ -82,50 +55,81 @@ class _HomePageState extends State<HomePage> {
                       primary: false,
                       crossAxisCount: 2,
                       children: <Widget>[
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          elevation: 4,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              // FormularioPage2()
-                                              inspectionRegister()));
-                                  /*   FormPage(
-                                                title: '',
-                                              ))); */
-
-                                  /*      RecursoInsertarMonitoreoProyecto())); */
-                                },
-                                child: SizedBox(
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListarEstaciones()));
+                            /*     RegistroIsnpeccion())); */
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            elevation: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
                                   height: 80,
                                   width: 80,
                                   child: Image.asset('assets/registro.png'),
                                 ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(30),
-                                child: const Text(
-                                  'Nueva Inspección',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    height: 0.8,
-                                    color: Colors.black,
-                                    fontSize: 14,
+                                Container(
+                                  padding: const EdgeInsets.all(30),
+                                  child: const Text(
+                                    'Nueva Inspección',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      height: 0.8,
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        Card(
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListarEstaciones()));
+                            /*     RegistroIsnpeccion())); */
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            elevation: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 80,
+                                  width: 80,
+                                  child: Image.asset('assets/lista.png'),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(30),
+                                  child: const Text(
+                                    'Lista de Inspecciones',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      height: 0.8,
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        /*  Card(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           elevation: 4,
@@ -138,54 +142,13 @@ class _HomePageState extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-
-                                              /*   List1())); */
-                                              ListViewFromSqlServer()));
+                                              const Estaciones_Maps()));
                                   /*      RecursoInsertarMonitoreoProyecto())); */
                                 },
                                 child: SizedBox(
                                   height: 80,
                                   width: 80,
-                                  child: Image.asset('assets/lista.png'),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(30),
-                                child: const Text(
-                                  'Lista de Inspecciones',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    height: 0.8,
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /*     Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          elevation: 4,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                /*    onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ListaMonitoreos()));
-                                  /*      RecursoInsertarMonitoreoProyecto())); */
-                                }, */
-                                child: SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                  child: Image.asset('assets/lista.png'),
+                                  child: Image.asset('assets/gps.png'),
                                 ),
                               ),
                               Container(

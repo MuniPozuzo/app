@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, depend_on_referenced_packages
 import 'dart:convert';
-/* import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:mi_pais/pages/extern/cuaderno_obra_residente.dart'; */
-
-import 'package:appproyecto2/modelo/authmodel.dart';
+import 'dart:math';
+import 'package:appproyecto2/Login/Sign_Up.dart';
+import 'package:appproyecto2/constants/urls.dart';
+import 'package:appproyecto2/models/authmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../home/menunavegacion.dart';
-// Librerias para alaerta
+import '../home/Menu_Navegacion.dart';
+// Librerias para alerta
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,15 +20,17 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-// ignore: camel_case_types
-
-/* String codigoUsuario; */
-
 class _LoginScreenState extends State<LoginScreen> {
+  final List<String> backgrounds = [
+    'assets/lago.png',
+    'assets/lago2.png',
+    'assets/campo.png',
+    'assets/nevado.png',
+    // Agrega otras imágenes según
+    //sea necesario
+  ];
   bool vis = true;
   final _globalkey = GlobalKey<FormState>();
-/*   NetworkHandler networkHandler = NetworkHandler(); */
-  /*  TextEditingController _usernameController = TextEditingController(); */
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String errorText = "";
@@ -39,33 +40,43 @@ class _LoginScreenState extends State<LoginScreen> {
   get networkHandler => null;
 
   get storage => null;
-/*   final storage = new FlutterSecureStorage(); */
-
   @override
   Widget build(BuildContext context) {
+    String randomBackground = getRandomBackground();
     return Scaffold(
       body: initWidget(),
     );
   }
 
   Future<AutModel> login() async {
-    final String username = _emailController.text;
-    final String pass = _passwordController.text;
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2:3001/apiv1/auth/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'username': username,
-        'password': pass,
-      }),
-    );
-    AutModel res = authFromJson(response.body);
-    return res;
+    final String usuario = _emailController.text;
+    final String password = _passwordController.text;
+    var url = isLocal ? UrlApiLocal : UrlApi;
+    print(url);
+    try {
+      final response = await http.post(
+        Uri.parse('http://181.176.161.129:8080/app/apiv1/auth/login'),
+        /*      Uri.parse('http://10.0.2.2:3001/apiv1/auth/login'), */
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'usuario': usuario,
+          'password': password,
+        }),
+      );
+      AutModel res = authFromJson(response.body);
+
+      return res;
+    } catch (e) {
+      print(e);
+
+      return AutModel(message: 'Error', status: false, user: null);
+    }
   }
 
   Widget initWidget() {
+    String randomBackground = getRandomBackground();
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -73,57 +84,98 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               Container(
-                height: 400,
+                height: 450,
                 // ignore: prefer_const_constructors
                 decoration: BoxDecoration(
                   borderRadius:
                       const BorderRadius.only(bottomLeft: Radius.circular(90)),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/login_app2.jpg'),
+                  image: DecorationImage(
+                    image: AssetImage(randomBackground),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 60),
-                    alignment: Alignment.centerRight,
-                    child: const Text(
-                      "Ingrese sus Credenciales",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 22, 41, 146),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              )),
               Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        alignment: Alignment.centerRight,
+                        child: const Text(
+                          "INICIAR SESIÓN",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 12, 23, 92),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  )),
+              Container(
+                  /*      decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [
+                      (const Color(0xffF5591F)),
+                      new Color(0xffF2861E)
+                    ], begin: Alignment.centerLeft, end: Alignment.centerRight),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(90),
+                        bottomRight: Radius.circular(90)),
+                    color: Colors.grey[200],
+                    boxShadow: const [
+                      BoxShadow(
+                          offset: Offset(0, 10),
+                          blurRadius: 20,
+                          color: Color.fromARGB(255, 241, 161, 161)),
+                    ],
+                  ), */
+                  /*      color: Color.fromARGB(255, 22, 41, 146), */
+
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(
+                      left: 5, right: 5, top: 5, bottom: 5),
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 20, bottom: 10),
+                  child: Column(
+                    children: [
+                      Container(
+                          child: Column(
+                        children: [
+                          /*  Container(padding: EdgeInsets.all(10)), */
+                          CorreoTextfield(),
+                          PasswordTextfield(),
+                        ],
+                      ))
+                    ],
+                  )),
+
+              /*     Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(left: 20, right: 20, top: 50),
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Column(
+
+
+                    
                     children: [
                       CorreoTextfield(),
                       PasswordTextfield(),
                     ],
-                  )),
+                  )), */
               InkWell(
                 onTap: () async {
-                  final pass = _passwordController.text;
-                  final email = _emailController.text;
+                  final password = _passwordController.text;
+                  final usuario = _emailController.text;
                   try {
-                    if (email.isEmpty) {
-                      Fluttertoast.showToast(msg: 'Correo vacio');
-                      return print('email vacio');
+                    if (usuario.isEmpty) {
+                      Fluttertoast.showToast(msg: 'Dni vacio');
+                      return print('Dni Vacio');
                     }
-                    if (pass.isEmpty) {
+                    if (password.isEmpty) {
                       Fluttertoast.showToast(msg: 'Paswword vacio');
-                      return print('pass vacio');
+                      return print('Contraseña Vacio');
                     }
                   } catch (e) {
                     print(e);
@@ -137,7 +189,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.setString('id', res.user!.id.toString());
-                    prefs.setString('name', res.user!.username.toString());
+                    /*  prefs.setString('name', res.user!.usuario.toString()); */
+                    prefs.setString('user', res.user!.usuario.toString());
+                    prefs.setString('nombre', res.user!.nombre.toString());
+                    prefs.setString('cargo', res.user!.cargo.toString());
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => MenuNavegacion()),
@@ -157,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  margin: const EdgeInsets.only(left: 20, right: 20, top: 40),
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 0),
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   height: 54,
                   decoration: BoxDecoration(
@@ -186,14 +242,72 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 40),
+                  /*  Container(
+                    margin: const EdgeInsets.only(top: 20),
                     alignment: Alignment.centerRight,
                     child: const Text(
-                      "Al Ingresar, acepta nuestros Terminos & Condiciones",
+                      "No tiene cuenta Cuenta? crear cuenta",
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                  )
+                  ) */
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      /*  onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignUp()));
+                      }, */
+                      /*  child: const Text(
+                        "No tiene cuenta Cuenta? crear cuenta",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ), */
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No tiene una Cuenta?',
+                            style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUp()));
+                            },
+                            child: const Text(
+                              'Regístrese',
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  /*   Text(
+                    'Don\'t have an account?',
+                    style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Register',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ), */
                 ],
               )),
             ],
@@ -221,7 +335,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Icons.person,
             color: const Color.fromARGB(255, 4, 107, 191),
           ),
-          hintText: "Ingrese su Correo",
+          hintText: "Ingrese su DNI",
           hintStyle:
               const TextStyle(color: const Color.fromARGB(255, 42, 73, 119)),
           filled: true,
@@ -271,6 +385,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
     );
+  }
+
+  String getRandomBackground() {
+    Random random = Random();
+    int index = random.nextInt(backgrounds.length);
+    return backgrounds[index];
   }
 }
 
